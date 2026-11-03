@@ -1,0 +1,9 @@
+# MP2: Data Processing REST API
+
+This project is a FastAPI application that turns my MP1 data-cleaning pipeline into a REST API. 
+`GET /health` reports the API's status and version, and `POST /upload` accepts a CSV file, stores it in memory, and returns its ID, row and column counts, and column names. 
+`GET /datasets/{dataset_id}` returns up to `limit` rows of a stored dataset along with its total row count. 
+`POST /datasets/{dataset_id}/process` takes a JSON configuration, validates the dataset's required and numeric columns, cleans it with the reused MP1 modules in 
+`data_pipeline/` (duplicate removal, missing-value handling, and optional outlier removal), replaces the stored data with the cleaned version, and returns a cleaning report.   
+Middleware in `src/middleware.py` logs every request with a unique request ID (also returned in the `X-Request-ID` response header), its status code, and its duration, 
+and the pytest suite in `tests/` checks the upload → process → retrieve workflow. Start the server with `python -m uvicorn main:app --reload`, and run the tests with `python -m pytest tests -v`.
